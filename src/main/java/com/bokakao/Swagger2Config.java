@@ -20,7 +20,7 @@ public class Swagger2Config  {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.codetogether.openstudio.controller.apis.v1"))
+                .apis(RequestHandlerSelectors.basePackage("com.bokakao"))
                 .paths(PathSelectors.ant("/api/v1/**"))
                 .paths(PathSelectors.any())
                 .build();
