@@ -27,9 +27,14 @@ dependencies {
 	
 	// jsoup 자바 크롤링
 	implementation group: 'org.jsoup', name: 'jsoup', version: '1.15.3'
+	// 동적 페이지 스크랩핑 
+	implementation group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '4.1.2'
 	
 	//json 추가
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+	
+	// mybatis	
+	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 	
 	//fileupload 
 	implementation 'commons-io:commons-io:2.8.0'

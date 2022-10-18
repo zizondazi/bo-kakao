@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bokakao.category.mapper.CmmCategoryMapper">
+
+	<insert id="mergeCmmCategory" parameterType="com.bokakao.category.domain.CmmCategoryDomain">
+		/* [CmmCategoryMapper - mergeCmmCategory] 카테고리 저장 */
+		insert into cmm_category (
+			cate_seq,
+			cate_nm,
+			cate_up_seq
+		) values (
+			#{cate_seq},
+			#{cate_nm},
+			#{cate_up_seq}
+		)
+		on duplicate key update
+			cate_nm 	= #{cate_nm},
+			cate_up_seq = #{cate_up_seq}
+	</insert>
+
+</mapper>

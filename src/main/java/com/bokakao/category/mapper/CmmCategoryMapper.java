@@ -1,0 +1,17 @@
+package com.bokakao.category.mapper;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
+
+@Mapper
+@Repository
+public interface CmmCategoryMapper<T> {
+	
+	/**
+     * 카테고리 등록
+     * @param CmmCategoryDomain
+     * @return
+     * @throws Exception
+     */
+    public void mergeCmmCategory(T param) throws Exception;
+}
