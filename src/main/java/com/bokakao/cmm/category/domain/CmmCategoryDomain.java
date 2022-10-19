@@ -1,6 +1,6 @@
-package com.bokakao.category.domain;
+package com.bokakao.cmm.category.domain;
 
-import com.bokakao.common.domain.CommonDomain;
+import com.bokakao.util.domain.CommonDomain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

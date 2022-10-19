@@ -1,6 +1,6 @@
-package com.bokakao.category.service;
+package com.bokakao.cmm.category.service;
 
-import com.bokakao.category.domain.CmmCategoryDomain;
+import com.bokakao.cmm.category.domain.CmmCategoryDomain;
 
 public interface CmmCategoryService {
     

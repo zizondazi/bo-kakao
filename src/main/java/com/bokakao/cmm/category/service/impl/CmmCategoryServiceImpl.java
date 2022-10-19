@@ -1,12 +1,10 @@
-package com.bokakao.category.service.impl;
-
-import javax.annotation.Resource;
+package com.bokakao.cmm.category.service.impl;
 
 import org.springframework.stereotype.Service;
 
-import com.bokakao.category.domain.CmmCategoryDomain;
-import com.bokakao.category.mapper.CmmCategoryMapper;
-import com.bokakao.category.service.CmmCategoryService;
+import com.bokakao.cmm.category.domain.CmmCategoryDomain;
+import com.bokakao.cmm.category.mapper.CmmCategoryMapper;
+import com.bokakao.cmm.category.service.CmmCategoryService;
 
 import lombok.extern.slf4j.Slf4j;
 

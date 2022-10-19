@@ -1,4 +1,4 @@
-package com.bokakao.common.domain;
+package com.bokakao.util.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

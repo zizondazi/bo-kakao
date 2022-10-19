@@ -2,8 +2,6 @@ package com.bokakao.batch;
 
 import java.time.format.DateTimeFormatter;
 
-import javax.annotation.Resource;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -11,11 +9,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.bokakao.category.domain.CmmCategoryDomain;
-import com.bokakao.category.mapper.CmmCategoryMapper;
+import com.bokakao.cmm.category.domain.CmmCategoryDomain;
+import com.bokakao.cmm.category.mapper.CmmCategoryMapper;
 
 import lombok.extern.slf4j.Slf4j;
 

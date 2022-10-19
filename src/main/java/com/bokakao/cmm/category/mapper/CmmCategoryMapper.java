@@ -1,4 +1,4 @@
-package com.bokakao.category.mapper;
+package com.bokakao.cmm.category.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
