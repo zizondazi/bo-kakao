@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.bokakao.category.mapper.CmmCategoryMapper">
+<mapper namespace="com.bokakao.cmm.category.mapper.CmmCategoryMapper">
 
-	<insert id="mergeCmmCategory" parameterType="com.bokakao.category.domain.CmmCategoryDomain">
+	<insert id="mergeCmmCategory" parameterType="com.bokakao.cmm.category.domain.CmmCategoryDomain">
 		/* [CmmCategoryMapper - mergeCmmCategory] 카테고리 저장 */
 		insert into cmm_category (
 			cate_seq,
@@ -17,5 +17,20 @@
 			cate_nm 	= #{cate_nm},
 			cate_up_seq = #{cate_up_seq}
 	</insert>
-
+	
+	<select id="getCmmCategoryList" parameterType="Integer" resultType="com.bokakao.cmm.category.domain.CmmCategoryDomain">
+		/* [CmmCategoryMapper - getCmmCategoryList] 카테고리 목록 조회 */
+		select 
+			cate_seq,
+			cate_nm,
+			cate_up_seq
+		from cmm_category
+		where 1=1
+		<if test="cate_up_seq != null and cate_up_seq != ''">
+			and cate_up_seq = #{cate_up_seq}
+		</if>
+		<if test="cate_seq != null and cate_seq != ''">
+			and cate_seq = #{cate_seq}
+		</if>
+	</select>
 </mapper>

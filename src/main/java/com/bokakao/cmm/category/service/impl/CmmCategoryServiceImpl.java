@@ -1,18 +1,18 @@
 package com.bokakao.cmm.category.service.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bokakao.cmm.category.domain.CmmCategoryDomain;
 import com.bokakao.cmm.category.mapper.CmmCategoryMapper;
 import com.bokakao.cmm.category.service.CmmCategoryService;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service("CmmCategoryService")
 public class CmmCategoryServiceImpl implements CmmCategoryService {
 	
-	//@Resource(name="CmmCategoryMapper")
+	@Autowired
 	private CmmCategoryMapper<CmmCategoryDomain> cmmCategoryMapper;
 	
 	/**
@@ -24,6 +24,17 @@ public class CmmCategoryServiceImpl implements CmmCategoryService {
 	@Override
 	public void mergeCmmCategory(CmmCategoryDomain param) throws Exception {
 		cmmCategoryMapper.mergeCmmCategory(param);
+	}
+	
+    /**
+     * 카테고리 목록 조회
+     * @param Integer up_cate_seq
+     * @return
+     * @throws Exception
+     */
+	@Override
+	public List<CmmCategoryDomain> getCmmCategoryList(Integer up_cate_seq) throws Exception {
+		return cmmCategoryMapper.getCmmCategoryList(up_cate_seq);
 	}
 
 }

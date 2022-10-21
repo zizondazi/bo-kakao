@@ -1,5 +1,7 @@
 package com.bokakao.cmm.category.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +16,12 @@ public interface CmmCategoryMapper<T> {
      * @throws Exception
      */
     public void mergeCmmCategory(T param) throws Exception;
+    
+    /**
+     * 카테고리 목록 조회
+     * @param Integer up_cate_seq
+     * @return
+     * @throws Exception
+     */
+    public List<T> getCmmCategoryList(Integer up_cate_seq) throws Exception;
 }

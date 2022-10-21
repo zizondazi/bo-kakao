@@ -1,5 +1,7 @@
 package com.bokakao.cmm.category.service;
 
+import java.util.List;
+
 import com.bokakao.cmm.category.domain.CmmCategoryDomain;
 
 public interface CmmCategoryService {
@@ -11,4 +13,12 @@ public interface CmmCategoryService {
      * @throws Exception
      */
     public void mergeCmmCategory(CmmCategoryDomain param) throws Exception;
+    
+    /**
+     * 카테고리 목록 조회
+     * @param Integer up_cate_seq
+     * @return
+     * @throws Exception
+     */
+    public List<CmmCategoryDomain> getCmmCategoryList(Integer cate_up_seq) throws Exception;
 }
