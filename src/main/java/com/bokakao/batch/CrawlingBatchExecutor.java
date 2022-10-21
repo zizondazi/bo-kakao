@@ -1,14 +1,18 @@
 package com.bokakao.batch;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.bokakao.cmm.category.domain.CmmCategoryDomain;
@@ -29,7 +33,7 @@ public class CrawlingBatchExecutor {
 	@Autowired
 	private CmmCategoryMapper<CmmCategoryDomain> cmmCategoryMapper;
 	
-	//@Scheduled(cron="30 38 10 * * *")
+	@Scheduled(cron="0 30 17 * * *")
 	public void crawling() {
 		try {
 			System.out.println("==== start :: crawling - category ====");
@@ -51,7 +55,8 @@ public class CrawlingBatchExecutor {
 			Thread.sleep(1000);
 			
 			// 카카오프렌즈 이용안내 끄기
-			driver.findElement(By.className("ico_close_n")).click();
+			//driver.findElement(By.className("ico_close_n")).click();
+			
 			// gnb 메뉴 클릭
 			driver.findElement(By.className("ico_gnb_menu")).click();
 			
@@ -64,7 +69,8 @@ public class CrawlingBatchExecutor {
 			// 카테고리 Elements
 			Elements el = doc.getElementsByClass("link_category");
 			
-		
+			List<CmmCategoryDomain> cate_list = new ArrayList<CmmCategoryDomain>();
+			
 			for(int i=0; i < el.size(); i++) {
 				CmmCategoryDomain category = new CmmCategoryDomain();
 				
@@ -76,7 +82,37 @@ public class CrawlingBatchExecutor {
 				category.setCate_nm(name);
 				category.setCate_seq(cate_seq);
 				
-				cmmCategoryMapper.mergeCmmCategory(category);
+				cate_list.add(category);
+				
+				// 상위 카테고리 저장
+				//cmmCategoryMapper.mergeCmmCategory(category); 
+			}
+			
+			for(CmmCategoryDomain cate :  cate_list) {
+				String cate_url = "https://store.kakaofriends.com/category?categorySeq=" + cate.getCate_seq();
+				
+				driver.get(cate_url);
+				List<WebElement> cate_dtl_list = driver.findElements(By.className("link_category"));
+				if(!cate.getCate_seq().equals("3")) {
+					// 전체 제외를 위해 1 부터 시작
+					for(int i=2; i <= cate_dtl_list.size(); i++) {
+						CmmCategoryDomain category = new CmmCategoryDomain();
+						
+						driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[1]/ul/li["+ i +"]/a")).click();
+						String curt_url = driver.getCurrentUrl(); // https://store.kakaofriends.com/category?categorySeq=64&subCategorySeq=65
+						int idx = curt_url.indexOf("subCategorySeq");
+						
+						category.setCate_seq(curt_url.substring(idx + "subCategorySeq=".length()));
+						category.setCate_up_seq(cate.getCate_seq());
+						category.setCate_nm(cate_dtl_list.get(i).getText());
+						
+						log.debug(category.getCate_seq());
+						// 하위 카테고리 저장
+						//cmmCategoryMapper.mergeCmmCategory(category); 
+						
+						Thread.sleep(5000);
+					}
+				}
 			}
 			
 			System.out.println("==== end :: crawling - category ====");
