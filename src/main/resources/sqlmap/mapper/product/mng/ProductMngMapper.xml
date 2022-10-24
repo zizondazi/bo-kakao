@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bokakao.product.mng.mapper.ProductMngMapper">
+
+	<insert id="mergeProductMng" parameterType="com.bokakao.product.mng.domain.ProductMngDomain">
+		/* [ProductMngMapper - mergeProductMng] 제품 저장 */
+		insert into product_mng (
+			prdt_seq,
+			prdt_nm,
+			prdt_price,
+			prdt_sale,
+			prdt_img,
+			prdt_stock,
+			prdt_season,
+			prdt_dtl,
+			prdt_info,
+			korea_shipping_yn,
+			intl_shipping_yn,
+			reg_dtm,
+			reg_uid,
+			mdf_dtm,
+			mdf_uid
+		) values (
+			#{prdt_seq},
+			#{prdt_nm},
+			#{prdt_price},
+			#{prdt_sale},
+			#{prdt_img},
+			#{prdt_stock},
+			#{prdt_season},
+			#{prdt_dtl},
+			#{prdt_info},
+			#{korea_shipping_yn},
+			#{intl_shipping_yn},
+			now(),
+			#{reg_uid},
+			now(),
+			#{mdf_uid}
+		)
+		on duplicate key update
+			prdt_nm 			= #{prdt_nm},
+			prdt_price 			= #{prdt_price},
+			prdt_sale			= #{prdt_sale},
+			prdt_img 			= #{prdt_img},
+			prdt_stock			= #{prdt_stock},
+			prdt_season			= #{prdt_season},
+			prdt_dtl			= #{prdt_dtl},
+			prdt_info			= #{prdt_info},
+			korea_shipping_yn 	= #{korea_shipping_yn},
+			intl_shipping_yn 	= #{intl_shipping_yn},
+			mdf_dtm				= now(),
+			mdf_uid				= #{mdf_uid}
+	</insert>
+</mapper>

@@ -17,6 +17,9 @@ import org.springframework.stereotype.Component;
 
 import com.bokakao.cmm.category.domain.CmmCategoryDomain;
 import com.bokakao.cmm.category.mapper.CmmCategoryMapper;
+import com.bokakao.product.cate.domain.ProductCateDomain;
+import com.bokakao.product.mng.domain.ProductMngDomain;
+import com.bokakao.product.mng.service.ProductMngService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,10 +36,16 @@ public class CrawlingBatchExecutor {
 	@Autowired
 	private CmmCategoryMapper<CmmCategoryDomain> cmmCategoryMapper;
 	
-	@Scheduled(cron="20 2 16 * * *")
+	@Autowired
+	private ProductMngService productMngService;
+	
+//	@Autowired
+//	private ProductMngMapper<ProductMngDomain> productMngMapper;
+	
+	@Scheduled(cron="20 56 17 * * *")
 	public void crawling() {
 		try {
-			System.out.println("==== start :: crawling - category ====");
+			System.out.println("==== start :: crawling ====");
 			
 			// 지존마로님과 대화 해보니 프렌즈샵은 리액트라고 한다. 
 			// WebDriver 경로 설정
@@ -96,30 +105,73 @@ public class CrawlingBatchExecutor {
 				List<WebElement> cate_dtl_list = driver.findElements(By.className("link_category"));
 				// 전체 제외
 				if(!cate.getCate_seq().equals("3")) {
-					// 헤더의 상위카테고리, 전체 제외를 위해 1 부터 시작
+					// 헤더의 상위카테고리, 전체 제외를 위해 2 부터 시작
 					for(int i=2; i < cate_dtl_list.size(); i++) {
 						CmmCategoryDomain category = new CmmCategoryDomain();
-						// 일부 엘리먼트 에러 발생으로 소스 수정
 						//driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[1]/ul/li["+ i +"]/a")).click();
+						// 일부 엘리먼트 에러 발생으로 소스 수정
 						WebElement cate_el = driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[1]/ul/li["+ i +"]/a"));
 						driver.executeScript("arguments[0].click();", cate_el);
 						
 						String curt_url = driver.getCurrentUrl(); // https://store.kakaofriends.com/category?categorySeq=64&subCategorySeq=65
 						int idx = curt_url.indexOf("subCategorySeq");
+						String cate_seq = curt_url.substring(idx + "subCategorySeq=".length());
 						
-						category.setCate_seq(curt_url.substring(idx + "subCategorySeq=".length()));
+						category.setCate_seq(cate_seq);
 						category.setCate_up_seq(cate.getCate_seq());
 						category.setCate_nm(cate_dtl_list.get(i).getText());
 						
 						// 하위 카테고리 저장
 						cmmCategoryMapper.mergeCmmCategory(category); 
 						
+						List<WebElement> product_list = driver.findElements(By.className("product_contents"));
+						String match = "[^0-9]";
+						for(int j=0; j < product_list.size(); j++) {
+							ProductMngDomain product = new ProductMngDomain();
+							// /products/8808
+							String product_seq_url = driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a")).getAttribute("href");
+							product.setPrdt_seq(product_seq_url.substring(10));
+							product.setPrdt_nm(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/strong")).getText());
+							product.setPrdt_img(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/a/div/img")).getAttribute("src"));
+							product.setPrdt_stock(10); // 기본 재고 10
+							product.setMdf_uid("0");
+							product.setReg_uid("0");
+							
+							// 세일가가 존재 할 경우
+							if(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/em/span")).isDisplayed()) {
+								Integer sale_price = Integer.parseInt(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/em/span")).getText().replaceAll(match, ""));
+								Integer price = Integer.parseInt(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/span[3]/span")).getText().replaceAll(match, ""));
+								Integer sale = (sale_price/price) * 100;
+								product.setPrdt_sale(sale);
+								product.setPrdt_price(sale_price);
+							}else {
+								product.setPrdt_sale(0);
+								product.setPrdt_price(Integer.parseInt(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/em/span")).getText().replaceAll(match, "")));
+							}
+							// 서비스로 이동예정 - 왤케 할게 많노.. ㅠ 괴롭다 지존희빈님...
+							List<ProductCateDomain> prdt_cate_list = new ArrayList<ProductCateDomain>();
+							ProductCateDomain prdt_cate = new ProductCateDomain();
+							
+							prdt_cate.setPrdt_seq(product_seq_url.substring(10));
+							// 상위 카테고리 등록
+							prdt_cate.setCate_seq(cate.getCate_seq());
+							prdt_cate_list.add(prdt_cate);
+							
+							// 하위 카테고리 등록
+							prdt_cate.setCate_seq(cate_seq);
+							prdt_cate_list.add(prdt_cate);
+							
+							// 트레잭션 처리
+							productMngService.mergeProductMng(product, prdt_cate_list);
+							
+						}
+						
 						Thread.sleep(3000);
 					}
 				}
 			}
 			
-			System.out.println("==== end :: crawling - category ====");
+			System.out.println("==== end :: crawling ====");
 			
 			
 		} catch (Exception e) {
