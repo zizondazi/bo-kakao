@@ -28,13 +28,13 @@ public class CmmCategoryServiceImpl implements CmmCategoryService {
 	
     /**
      * 카테고리 목록 조회
-     * @param Integer up_cate_seq
+     * @param CmmCategoryDomain
      * @return
      * @throws Exception
      */
 	@Override
-	public List<CmmCategoryDomain> getCmmCategoryList(Integer up_cate_seq) throws Exception {
-		return cmmCategoryMapper.getCmmCategoryList(up_cate_seq);
+	public List<CmmCategoryDomain> getCmmCategoryList(CmmCategoryDomain param) throws Exception {
+		return cmmCategoryMapper.getCmmCategoryList(param);
 	}
 
 }

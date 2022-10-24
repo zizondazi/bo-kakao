@@ -19,9 +19,9 @@ public interface CmmCategoryMapper<T> {
     
     /**
      * 카테고리 목록 조회
-     * @param Integer up_cate_seq
+     * @param CmmCategoryDomain
      * @return
      * @throws Exception
      */
-    public List<T> getCmmCategoryList(Integer up_cate_seq) throws Exception;
+    public List<T> getCmmCategoryList(T param) throws Exception;
 }

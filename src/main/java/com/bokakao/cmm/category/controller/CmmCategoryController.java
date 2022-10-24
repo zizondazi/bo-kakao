@@ -41,7 +41,9 @@ public class CmmCategoryController {
 		
 		List<CmmCategoryDomain> cate_list = null;
 		try {
-			cate_list = cmmCategoryService.getCmmCategoryList(cate_up_seq);
+			CmmCategoryDomain cate = new CmmCategoryDomain();
+			cate.setCate_up_seq(String.valueOf(cate_up_seq));
+			cate_list = cmmCategoryService.getCmmCategoryList(cate);
 		} catch (Exception e) {
 			e.printStackTrace();
 			new ResponseStatusException(HttpStatus.BAD_REQUEST, "cate_up_seq 값이 없습니다.");

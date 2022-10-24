@@ -18,7 +18,7 @@
 			cate_up_seq = #{cate_up_seq}
 	</insert>
 	
-	<select id="getCmmCategoryList" parameterType="Integer" resultType="com.bokakao.cmm.category.domain.CmmCategoryDomain">
+	<select id="getCmmCategoryList" parameterType="com.bokakao.cmm.category.domain.CmmCategoryDomain" resultType="com.bokakao.cmm.category.domain.CmmCategoryDomain">
 		/* [CmmCategoryMapper - getCmmCategoryList] 카테고리 목록 조회 */
 		select 
 			cate_seq,
