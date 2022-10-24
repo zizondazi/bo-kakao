@@ -28,12 +28,12 @@ public class CrawlingBatchExecutor {
 	
 	// chromdriver 설치 경로
 	public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
-	public static String WEB_DRIVER_PATH = "D:/chromedriver.exe";
+	public static String WEB_DRIVER_PATH = "src/main/resources/chromedriver.exe";
 	
 	@Autowired
 	private CmmCategoryMapper<CmmCategoryDomain> cmmCategoryMapper;
 	
-	@Scheduled(cron="20 33 10 * * *")
+	@Scheduled(cron="20 2 16 * * *")
 	public void crawling() {
 		try {
 			System.out.println("==== start :: crawling - category ====");
@@ -85,7 +85,7 @@ public class CrawlingBatchExecutor {
 				cate_list.add(category);
 				
 				// 상위 카테고리 저장
-				//cmmCategoryMapper.mergeCmmCategory(category); 
+				cmmCategoryMapper.mergeCmmCategory(category); 
 			}
 			
 			// 하위 카테고리 저장 
@@ -111,10 +111,8 @@ public class CrawlingBatchExecutor {
 						category.setCate_up_seq(cate.getCate_seq());
 						category.setCate_nm(cate_dtl_list.get(i).getText());
 						
-						log.debug(category.getCate_seq());
-						System.out.println(category.getCate_seq());
 						// 하위 카테고리 저장
-						//cmmCategoryMapper.mergeCmmCategory(category); 
+						cmmCategoryMapper.mergeCmmCategory(category); 
 						
 						Thread.sleep(3000);
 					}
