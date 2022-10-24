@@ -33,7 +33,7 @@ public class CrawlingBatchExecutor {
 	@Autowired
 	private CmmCategoryMapper<CmmCategoryDomain> cmmCategoryMapper;
 	
-	@Scheduled(cron="0 30 17 * * *")
+	@Scheduled(cron="20 33 10 * * *")
 	public void crawling() {
 		try {
 			System.out.println("==== start :: crawling - category ====");
@@ -88,17 +88,22 @@ public class CrawlingBatchExecutor {
 				//cmmCategoryMapper.mergeCmmCategory(category); 
 			}
 			
+			// 하위 카테고리 저장 
 			for(CmmCategoryDomain cate :  cate_list) {
 				String cate_url = "https://store.kakaofriends.com/category?categorySeq=" + cate.getCate_seq();
 				
 				driver.get(cate_url);
 				List<WebElement> cate_dtl_list = driver.findElements(By.className("link_category"));
+				// 전체 제외
 				if(!cate.getCate_seq().equals("3")) {
-					// 전체 제외를 위해 1 부터 시작
-					for(int i=2; i <= cate_dtl_list.size(); i++) {
+					// 헤더의 상위카테고리, 전체 제외를 위해 1 부터 시작
+					for(int i=2; i < cate_dtl_list.size(); i++) {
 						CmmCategoryDomain category = new CmmCategoryDomain();
+						// 일부 엘리먼트 에러 발생으로 소스 수정
+						//driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[1]/ul/li["+ i +"]/a")).click();
+						WebElement cate_el = driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[1]/ul/li["+ i +"]/a"));
+						driver.executeScript("arguments[0].click();", cate_el);
 						
-						driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[1]/ul/li["+ i +"]/a")).click();
 						String curt_url = driver.getCurrentUrl(); // https://store.kakaofriends.com/category?categorySeq=64&subCategorySeq=65
 						int idx = curt_url.indexOf("subCategorySeq");
 						
@@ -107,10 +112,11 @@ public class CrawlingBatchExecutor {
 						category.setCate_nm(cate_dtl_list.get(i).getText());
 						
 						log.debug(category.getCate_seq());
+						System.out.println(category.getCate_seq());
 						// 하위 카테고리 저장
 						//cmmCategoryMapper.mergeCmmCategory(category); 
 						
-						Thread.sleep(5000);
+						Thread.sleep(3000);
 					}
 				}
 			}
