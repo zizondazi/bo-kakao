@@ -14,7 +14,7 @@ public class ProductMngDomain extends CommonDomain {
 	private String prdt_seq;			// 제품 seq
 	private String prdt_nm;				// 제품명
 	private Integer prdt_price;			// 제품가격
-	private Integer prdt_sale;			// 제품세일율
+	private Integer prdt_sale_price;	// 제품 세일금액
 	private String prdt_img;			// 제품이미지 - 주소형태
 	private Integer prdt_stock;			// 재품재고
 	private String prdt_character;		// 재품캐릭터 - 멀티 캐릭터 지정 가능으로 테이블 따로 뺌

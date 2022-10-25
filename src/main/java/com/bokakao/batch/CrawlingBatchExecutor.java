@@ -8,6 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -42,7 +43,7 @@ public class CrawlingBatchExecutor {
 //	@Autowired
 //	private ProductMngMapper<ProductMngDomain> productMngMapper;
 	
-	@Scheduled(cron="20 56 17 * * *")
+	@Scheduled(cron="40 44 10 * * *")
 	public void crawling() {
 		try {
 			System.out.println("==== start :: crawling ====");
@@ -94,7 +95,7 @@ public class CrawlingBatchExecutor {
 				cate_list.add(category);
 				
 				// 상위 카테고리 저장
-				cmmCategoryMapper.mergeCmmCategory(category); 
+				//cmmCategoryMapper.mergeCmmCategory(category); 
 			}
 			
 			// 하위 카테고리 저장 
@@ -122,15 +123,18 @@ public class CrawlingBatchExecutor {
 						category.setCate_nm(cate_dtl_list.get(i).getText());
 						
 						// 하위 카테고리 저장
-						cmmCategoryMapper.mergeCmmCategory(category); 
+						//cmmCategoryMapper.mergeCmmCategory(category); 
 						
 						List<WebElement> product_list = driver.findElements(By.className("product_contents"));
+						Thread.sleep(3000);
+						
 						String match = "[^0-9]";
-						for(int j=0; j < product_list.size(); j++) {
+						
+						for(int j=1; j <= product_list.size(); j++) {
 							ProductMngDomain product = new ProductMngDomain();
-							// /products/8808
+							// https://store.kakaofriends.com/products/8856							  
 							String product_seq_url = driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a")).getAttribute("href");
-							product.setPrdt_seq(product_seq_url.substring(10));
+							product.setPrdt_seq(product_seq_url.substring("https://store.kakaofriends.com/products/".length()));
 							product.setPrdt_nm(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/strong")).getText());
 							product.setPrdt_img(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/a/div/img")).getAttribute("src"));
 							product.setPrdt_stock(10); // 기본 재고 10
@@ -138,35 +142,36 @@ public class CrawlingBatchExecutor {
 							product.setReg_uid("0");
 							
 							// 세일가가 존재 할 경우
-							if(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/em/span")).isDisplayed()) {
-								Integer sale_price = Integer.parseInt(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/em/span")).getText().replaceAll(match, ""));
+							try {														
 								Integer price = Integer.parseInt(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/span[3]/span")).getText().replaceAll(match, ""));
-								Integer sale = (sale_price/price) * 100;
-								product.setPrdt_sale(sale);
-								product.setPrdt_price(sale_price);
-							}else {
-								product.setPrdt_sale(0);
+								Integer sale_price = Integer.parseInt(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/em/span")).getText().replaceAll(match, ""));
+								//Integer sale = (price-sale_price) / price * 100;
+								product.setPrdt_sale_price(sale_price);
+								product.setPrdt_price(price);
+							}catch(NoSuchElementException e) {
+								product.setPrdt_sale_price(0);
 								product.setPrdt_price(Integer.parseInt(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-category-list/main/article/div/div[3]/fs-view-product-list/cu-infinite-scroll/div/ul/li["+ j +"]/div/div/a/span/em/span")).getText().replaceAll(match, "")));
 							}
+							
 							// 서비스로 이동예정 - 왤케 할게 많노.. ㅠ 괴롭다 지존희빈님...
 							List<ProductCateDomain> prdt_cate_list = new ArrayList<ProductCateDomain>();
 							ProductCateDomain prdt_cate = new ProductCateDomain();
+							ProductCateDomain sub_prdt_cate = new ProductCateDomain();
 							
-							prdt_cate.setPrdt_seq(product_seq_url.substring(10));
 							// 상위 카테고리 등록
+							prdt_cate.setPrdt_seq(product_seq_url.substring("https://store.kakaofriends.com/products/".length()));
 							prdt_cate.setCate_seq(cate.getCate_seq());
 							prdt_cate_list.add(prdt_cate);
 							
 							// 하위 카테고리 등록
-							prdt_cate.setCate_seq(cate_seq);
-							prdt_cate_list.add(prdt_cate);
+							sub_prdt_cate.setPrdt_seq(product_seq_url.substring("https://store.kakaofriends.com/products/".length()));
+							sub_prdt_cate.setCate_seq(cate_seq);
+							prdt_cate_list.add(sub_prdt_cate);
 							
 							// 트레잭션 처리
 							productMngService.mergeProductMng(product, prdt_cate_list);
 							
 						}
-						
-						Thread.sleep(3000);
 					}
 				}
 			}
