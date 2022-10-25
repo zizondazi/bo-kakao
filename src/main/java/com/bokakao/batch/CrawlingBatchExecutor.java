@@ -67,6 +67,30 @@ public class CrawlingBatchExecutor {
 			// 카카오프렌즈 이용안내 끄기
 			//driver.findElement(By.className("ico_close_n")).click();
 			
+			// 카테고리별 제품 저장
+			getProductByCategory(driver);
+			
+			// TODO 캐릭터 저장
+			
+			// TODO 제품 캐릭터 타입 저장
+			
+			// TODO 제품 상세 내용 저장
+			
+			// TODO 카스타그램 크롤링
+			
+			
+			System.out.println("==== end :: crawling ====");
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	// 카테고리별 제품 저장
+	public void getProductByCategory(ChromeDriver driver) {
+		
+		try {
 			// gnb 메뉴 클릭
 			driver.findElement(By.className("ico_gnb_menu")).click();
 			
@@ -170,18 +194,15 @@ public class CrawlingBatchExecutor {
 							
 							// 트레잭션 처리
 							productMngService.mergeProductMng(product, prdt_cate_list);
-							
 						}
 					}
 				}
 			}
-			
-			System.out.println("==== end :: crawling ====");
-			
-			
 		} catch (Exception e) {
 			e.printStackTrace();
+			log.info("==== 카테고리 별 상품 크롤링 실패!! ===");
 		}
-		
 	}
 }
+
+
