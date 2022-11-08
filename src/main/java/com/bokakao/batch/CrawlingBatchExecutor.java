@@ -78,11 +78,10 @@ public class CrawlingBatchExecutor {
 			//driver.findElement(By.className("ico_close_n")).click();
 			
 			// 카테고리별 제품 저장
-			//getProductByCategory((ChromeDriver) driver);
+			getProductByCategory((ChromeDriver) driver);
 			
 			// 캐릭터 별 제품 저장
 			getProductByCharacter((ChromeDriver) driver);
-			
 			
 			// TODO 제품 상세 내용 저장
 			
