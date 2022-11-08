@@ -111,11 +111,15 @@ public class CrawlingBatchExecutor {
 			// 카테고리 Elements
 			Elements el = doc.getElementsByClass("link_character");
 			
-			System.out.println("size() :: " + el.size());
+			int count = 0;
 			
-			if(el.size() == 0) {
-				Thread.sleep(3000);
-				el = doc.getElementsByClass("link_character");
+			// 최대 5회까지 실행
+			while(count < 5) {
+				if(el.size() == 0) {
+					Thread.sleep(3000);
+					el = doc.getElementsByClass("link_character");
+					count++;
+				}
 			}
 			
 			List<CmmCharacterDomain> char_list = new ArrayList<CmmCharacterDomain>();
@@ -240,6 +244,17 @@ public class CrawlingBatchExecutor {
 			
 			// 카테고리 Elements
 			Elements el = doc.getElementsByClass("link_category");
+			
+			int count = 0;
+			
+			// 최대 5회까지 실행
+			while(count < 5) {
+				if(el.size() == 0) {
+					Thread.sleep(3000);
+					el = doc.getElementsByClass("link_category");
+					count++;
+				}
+			}
 			
 			List<CmmCategoryDomain> cate_list = new ArrayList<CmmCategoryDomain>();
 			
