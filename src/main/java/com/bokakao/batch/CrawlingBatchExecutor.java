@@ -1,6 +1,5 @@
 package com.bokakao.batch;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class CrawlingBatchExecutor {
 	
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm:ss:SSS");
-	
 	// chromdriver 설치 경로
 	public static String WEB_DRIVER_ID = "webdriver.chrome.driver";
 	public static String WEB_DRIVER_PATH = "src/main/resources/chromedriver.exe";
@@ -43,7 +40,7 @@ public class CrawlingBatchExecutor {
 //	@Autowired
 //	private ProductMngMapper<ProductMngDomain> productMngMapper;
 	
-	@Scheduled(cron="40 44 10 * * *")
+	//@Scheduled(cron="40 44 10 * * *")
 	public void crawling() {
 		try {
 			System.out.println("==== start :: crawling ====");
