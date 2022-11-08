@@ -115,11 +115,10 @@ public class CrawlingBatchExecutor {
 			
 			// 최대 5회까지 실행
 			while(count < 5) {
-				if(el.size() == 0) {
-					Thread.sleep(3000);
-					el = doc.getElementsByClass("link_character");
-					count++;
-				}
+				if(el.size() != 0) break;
+				Thread.sleep(3000);
+				el = doc.getElementsByClass("link_character");
+				count++;
 			}
 			
 			List<CmmCharacterDomain> char_list = new ArrayList<CmmCharacterDomain>();
@@ -249,11 +248,10 @@ public class CrawlingBatchExecutor {
 			
 			// 최대 5회까지 실행
 			while(count < 5) {
-				if(el.size() == 0) {
-					Thread.sleep(3000);
-					el = doc.getElementsByClass("link_category");
-					count++;
-				}
+				if(el.size() != 0) break;
+				Thread.sleep(3000);
+				el = doc.getElementsByClass("link_category");
+				count++;
 			}
 			
 			List<CmmCategoryDomain> cate_list = new ArrayList<CmmCategoryDomain>();
