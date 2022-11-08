@@ -13,7 +13,7 @@ public interface ProductCateMapper<T> {
      * @return
      * @throws Exception
      */
-    public void insertProductMng(T param) throws Exception;
+    public void insertProductCate(T param) throws Exception;
     
     /**
      * 제품 카테고리 삭제
@@ -21,5 +21,5 @@ public interface ProductCateMapper<T> {
      * @return
      * @throws Exception
      */
-    public void deleteProductMng(String param) throws Exception;
+    public void deleteProductCate(String param) throws Exception;
 }

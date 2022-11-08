@@ -12,5 +12,5 @@ import lombok.experimental.SuperBuilder;
 public class ProductCharacterDomain extends CommonDomain {
 	
 	private String prdt_seq;			// 제품 seq
-	private String cate_seq; 			// 카테고리 seq
+	private String char_seq; 			// 캐릭터 seq
 }

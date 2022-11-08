@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bokakao.product.character.mapper.ProductCharacterMapper">
+
+	<insert id="insertProductCharacter" parameterType="com.bokakao.product.character.domain.ProductCharacterDomain">
+		/* [ProductCharacterMapper - insertProductCharacter] 제품 캐릭터 저장 */
+		insert into product_character (
+			prdt_seq,
+			char_seq
+		) values (
+			#{prdt_seq},
+			#{char_seq}
+		)
+	</insert>
+
+	<delete id="deleteProductCharacter" parameterType="com.bokakao.product.character.domain.ProductCharacterDomain">
+		/* [ProductCharacterMapper - deleteProductCharacter] 제품 캐릭터 삭제 */
+		delete from product_character
+		where prdt_seq = #{prdt_seq}
+	</delete>
+</mapper>

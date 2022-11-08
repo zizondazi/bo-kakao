@@ -11,7 +11,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@MapperScan(basePackages = "com.bokakao.*.*.mapper")
+@MapperScan(basePackages = "com.bokakao.**.**.mapper")
 @EnableTransactionManagement
 public class MyBatisConfig {
 	

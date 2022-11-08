@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bokakao.cmm.character.mapper.CmmCharacterMapper">
+
+	<insert id="mergeCmmCharacter" parameterType="com.bokakao.cmm.character.domain.CmmCharacterDomain">
+		/* [CmmCharacterMapper - mergeCmmCharacter] 캐릭터 저장 */
+		insert into cmm_character (
+			char_seq,
+			char_nm,
+			char_cate_img,
+			char_info_img,
+			ka_star_info,
+			ka_thum_img
+		) values (
+			#{char_seq},
+			#{char_nm},
+			#{char_cate_img},
+			#{char_info_img},
+			#{ka_star_info},
+			#{ka_thum_img}
+		)
+		on duplicate key update
+			<if test="char_nm != '' and char_nm != null">
+				char_nm 	  = #{char_nm},
+			</if>
+			<if test="char_cate_img != '' and char_cate_img != null">
+				char_cate_img = #{char_cate_img},
+			</if>
+			<if test="char_info_img != '' and char_info_img != null">
+				char_info_img = #{char_info_img},
+			</if>
+			<if test="ka_star_info != '' and ka_star_info != null">
+				ka_star_info = #{ka_star_info},
+			</if>
+			<if test="ka_thum_img != '' and ka_thum_img != null">
+				ka_thum_img  = #{ka_thum_img}
+			</if>
+	</insert>
+</mapper>

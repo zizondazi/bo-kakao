@@ -27,7 +27,14 @@
 		from cmm_category
 		where 1=1
 		<if test="cate_up_seq != null and cate_up_seq != ''">
-			and cate_up_seq = #{cate_up_seq}
+			<choose>
+				<when test='cate_up_seq != "3"'>
+					and cate_up_seq = #{cate_up_seq}
+				</when>
+				<otherwise>
+					and cate_up_seq is null
+				</otherwise>
+			</choose>
 		</if>
 		<if test="cate_seq != null and cate_seq != ''">
 			and cate_seq = #{cate_seq}

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.bokakao.product.cate.mapper.ProductCateMapper">
 
-	<insert id="insertProductMng" parameterType="com.bokakao.product.cate.domain.ProductCateDomain">
-		/* [ProductCateMapper - insertProductMng] 제품 카테고리 저장 */
+	<insert id="insertProductCate" parameterType="com.bokakao.product.cate.domain.ProductCateDomain">
+		/* [ProductCateMapper - insertProductCate] 제품 카테고리 저장 */
 		insert into product_cate (
 			prdt_seq,
 			cate_seq
@@ -13,8 +13,8 @@
 		)
 	</insert>
 	
-	<delete id="deleteProductMng" parameterType="String">
-		/* [ProductCateMapper - deleteProductMng] 제품 카테고리 삭제 */
+	<delete id="deleteProductCate" parameterType="String">
+		/* [ProductCateMapper - deleteProductCate] 제품 카테고리 삭제 */
 		delete from product_cate
 		where prdt_seq = #{prdt_seq}
 	</delete>
