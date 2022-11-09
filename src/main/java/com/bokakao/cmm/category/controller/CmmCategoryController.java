@@ -29,7 +29,7 @@ public class CmmCategoryController {
 	private CmmCategoryService cmmCategoryService;
 	
 	@ApiOperation(value = "카테고리 목록 조회", notes = "<strong style='color:red;'>카테고리</strong> 목록을 조회한다.")
-	@GetMapping("/list")
+	@GetMapping()
 	public ResponseEntity<?> getCmmCategoryList() {
 		
 		List<CmmCategoryDomain> cate_list = null;

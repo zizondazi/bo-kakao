@@ -1,5 +1,7 @@
 package com.bokakao.cmm.character.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -14,4 +16,12 @@ public interface CmmCharacterMapper<T> {
      * @throws Exception
      */
     public void mergeCmmCharacter(T param) throws Exception;
+    
+    /**
+     * 캐릭터 목록 조회
+     * @param 
+     * @return
+     * @throws Exception
+     */
+    public List<T> getCmmCharacter(T param) throws Exception;
 }

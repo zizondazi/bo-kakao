@@ -36,4 +36,20 @@
 				ka_thum_img  = #{ka_thum_img}
 			</if>
 	</insert>
+	
+	<select id="getCmmCharacter" parameterType="com.bokakao.cmm.character.domain.CmmCharacterDomain" resultType="com.bokakao.cmm.character.domain.CmmCharacterDomain">
+		/* [CmmCharacterMapper - getCmmCharacter] 캐릭터 조회 */
+		select 
+			char_seq,
+			char_nm,
+			char_cate_img,
+			char_info_img,
+			ka_star_info,
+			ka_thum_img
+		from cmm_character
+		where 1=1
+		<if test="char_seq != '' and char_seq != null">
+			and char_seq = #{char_seq}
+		</if>
+	</select>
 </mapper>
