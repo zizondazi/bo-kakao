@@ -51,4 +51,57 @@
 			mdf_dtm				= now(),
 			mdf_uid				= #{mdf_uid}
 	</insert>
+	
+	<insert id="mergeProductImg" parameterType="com.bokakao.product.mng.domain.ProductMngDomain">
+		/* [ProductMngMapper - mergeProductImg] 제품 이미지 저장 */
+		insert into product_img (
+			prdt_seq,
+			prdt_img
+		) values (
+			#{prdt_seq},
+			#{prdt_img}
+		)
+		on duplicate key update
+			prdt_img	= #{prdt_img}
+	</insert>
+	
+	<delete id="deleteProductImg" parameterType="com.bokakao.product.mng.domain.ProductMngDomain">
+		/* [ProductMngMapper - deleteProductImg] 제품 이미지 삭제 */
+		delete from product_img where prdt_seq = ${prdt_seq}
+	</delete>
+	
+	<select id="getProductList" parameterType="com.bokakao.product.mng.domain.ProductMngDomain" resultType="com.bokakao.product.mng.domain.ProductMngDomain">
+		/* [ProductMngMapper - getProductList] 제품 목록 조회 */
+		select t.*
+		from(
+			select @ROWNUM:=@ROWNUM+1 as row_num, a.*
+			from (select 
+						prdt_seq,
+						prdt_nm,
+						prdt_price,
+						prdt_sale_price,
+						prdt_img,
+						prdt_stock,
+						prdt_season,
+						prdt_dtl,
+						prdt_info,
+						korea_shipping_yn,
+						intl_shipping_yn,
+						reg_dtm,
+						reg_uid,
+						mdf_dtm,
+						mdf_uid
+				 from product_mng
+				 , (select @ROWNUM:=0) r
+				 where 1=1
+				 <if test="prdt_seq != '' and prdt_seq != null">
+				 	and prdt_seq = ${prdt_seq}
+				 </if>
+				 order by prdt_seq asc
+			)a
+		)t
+		<if test="page_no != '' and page_no != null">
+			where row_num between #{first_idx} and #{last_idx}
+		</if>
+	</select>
 </mapper>

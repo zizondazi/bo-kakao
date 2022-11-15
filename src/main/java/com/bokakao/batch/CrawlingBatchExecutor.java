@@ -7,15 +7,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.ElementNotInteractableException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.devtools.v85.page.model.JavascriptDialogOpening;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.bokakao.cmm.category.domain.CmmCategoryDomain;
@@ -25,6 +24,7 @@ import com.bokakao.cmm.character.mapper.CmmCharacterMapper;
 import com.bokakao.product.cate.domain.ProductCateDomain;
 import com.bokakao.product.character.domain.ProductCharacterDomain;
 import com.bokakao.product.mng.domain.ProductMngDomain;
+import com.bokakao.product.mng.mapper.ProductMngMapper;
 import com.bokakao.product.mng.service.ProductMngService;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -43,6 +43,9 @@ public class CrawlingBatchExecutor {
 	
 	@Autowired
 	private CmmCharacterMapper<CmmCharacterDomain> cmmCharacterMapper;
+	
+	@Autowired
+	private ProductMngMapper<ProductMngDomain> productMngMapper;
 	
 	@Autowired
 	private ProductMngService productMngService;
@@ -83,7 +86,8 @@ public class CrawlingBatchExecutor {
 			// 캐릭터 별 제품 저장
 			getProductByCharacter((ChromeDriver) driver);
 			
-			// TODO 제품 상세 내용 저장
+			// 제품 상세 내용 저장
+			getProductDetail((ChromeDriver) driver);
 			
 			// TODO 카스타그램 크롤링
 			
@@ -93,6 +97,56 @@ public class CrawlingBatchExecutor {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	// 제품 상세 저장
+	public void getProductDetail(ChromeDriver driver) {
+		
+		ProductMngDomain mng = new ProductMngDomain();
+		try {
+			List<ProductMngDomain> prdt_list = productMngService.getProductList(mng);
+			
+			for(ProductMngDomain prdt : prdt_list) {
+				List<ProductMngDomain> img_list = new ArrayList<>();
+				driver.get("https://store.kakaofriends.com/products/" + prdt.getPrdt_seq());
+				
+				// 제품 상세 
+				int count = 0;
+				while(count < 5) {
+					int result = getProduct(prdt, driver, img_list);
+					
+					if(result == 10) count++;
+					else break;
+				}
+				
+				productMngService.mergeProductDtl(prdt, img_list);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.info("==== 상품 상세 크롤링 실패!! ===");
+		}
+	}
+	
+	public int getProduct(ProductMngDomain prdt, ChromeDriver driver, List<ProductMngDomain> img_list) {
+		try {
+			prdt.setPrdt_dtl(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-home/main/article/div/div[2]/div[3]/p")).getAttribute("innerHTML"));
+			driver.executeScript("arguments[0].click();", driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-home/main/article/div/div[2]/div[3]/ul/li[1]/button/span")));
+			prdt.setPrdt_info(driver.findElement(By.xpath("/html/body/fs-root/div/fs-pw-home/main/article/div/div[2]/div[3]/ul/li[1]/div/div")).getText());
+			
+			List<WebElement> list = driver.findElements(By.className("thumb_g"));
+			for(int i = 0; i < list.size(); i++) {
+				ProductMngDomain mng = new ProductMngDomain();
+				mng.setPrdt_seq(prdt.getPrdt_seq());
+				mng.setPrdt_img(list.get(i).getAttribute("src"));
+				
+				img_list.add(mng);
+			}
+			
+			return 0;
+		} catch (NoSuchElementException e) {
+			return 10;
 		}
 	}
 	

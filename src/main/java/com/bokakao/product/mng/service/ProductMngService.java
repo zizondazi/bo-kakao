@@ -23,4 +23,20 @@ public interface ProductMngService {
      * @throws Exception
      */
     public void mergeProductMngByCharacter(ProductMngDomain mng, ProductCharacterDomain prdt_char) throws Exception;
+    
+    /**
+     * 제품 상세 등록
+     * @param ProductMngDomain
+     * @return
+     * @throws Exception
+     */
+    public void mergeProductDtl(ProductMngDomain mng, List<ProductMngDomain> img_list) throws Exception;
+    
+    /**
+     * 제품 목록 조회
+     * @param ProductMngDomain
+     * @return List<ProductMngDomain>
+     * @throws Exception
+     */
+    public List<ProductMngDomain> getProductList(ProductMngDomain mng) throws Exception;
 }

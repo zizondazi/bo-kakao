@@ -69,7 +69,7 @@ CREATE table if not exists `product_mng` (
   `prdt_character` varchar(30) DEFAULT NULL COMMENT '제품캐릭터',
   `prdt_season` varchar(30) DEFAULT NULL COMMENT '제품시즌',
   `prdt_dtl` blob DEFAULT NULL COMMENT '제품상세',
-  `prdt_info` blob DEFAULT NULL COMMENT '제품시즌',
+  `prdt_info` blob DEFAULT NULL COMMENT '제품정보',
   `korea_shipping_yn` varchar(2) DEFAULT NULL COMMENT '국내배송 여부',
   `intl_shipping_yn` varchar(2) DEFAULT NULL COMMENT '해외배송 여부',
   `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
@@ -103,3 +103,10 @@ CREATE table if not exists `product_cate` (
   CONSTRAINT `FK_CMM_CATEGORY_TO_PRODUCT_CATE` FOREIGN KEY (`cate_seq`) REFERENCES `cmm_category` (`cate_seq`),
   CONSTRAINT `FK_PRODUCT_MNG_TO_PRODUCT_CATE` FOREIGN KEY (`prdt_seq`) REFERENCES `product_mng` (`prdt_seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE  if not exists `product_img` (
+  `prdt_seq` varchar(30) NOT NULL COMMENT '제품seq',
+  `prdt_img` varchar(200) NOT NULL COMMENT '제품이미지',
+  PRIMARY KEY (`prdt_seq`, `prdt_img`),
+  KEY `PK_PRODUCT_MNG` (`prdt_seq`, `prdt_img`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;	

@@ -66,4 +66,33 @@ public class ProductMngServiceImpl implements ProductMngService {
 		// 제품 캐릭터 등록
 		productCharacterMapper.insertProductCharacter(prdt_char);
 	}
+	
+    /**
+     * 제품 목록 조회
+     * @param ProductMngDomain
+     * @return List<ProductMngDomain>
+     * @throws Exception
+     */
+	@Override
+	public List<ProductMngDomain> getProductList(ProductMngDomain mng) throws Exception {
+		return productMngMapper.getProductList(mng);
+	}
+	
+    /**
+     * 제품 상세 등록
+     * @param ProductMngDomain
+     * @return
+     * @throws Exception
+     */
+	@Override
+	public void mergeProductDtl(ProductMngDomain mng, List<ProductMngDomain> img_list) throws Exception {
+		// 제품  상세 저장
+		productMngMapper.mergeProductMng(mng);
+		
+		productMngMapper.deleteProductImg(mng);
+		// 이미지 저장 전 삭제
+		for(ProductMngDomain prdt : img_list) {
+			productMngMapper.mergeProductImg(prdt);
+		}
+	}
 }
