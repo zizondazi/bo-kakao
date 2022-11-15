@@ -20,11 +20,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
-@Api(tags = {"CmmCharacterController Api v1"})
+@Api(tags = {"RestCmmCharacterController Api v1"})
 @RestController
 @RequestMapping("/api/v1/cmm/character")
 @Slf4j
-public class CmmCharacterController {
+public class RestCmmCharacterController {
 
 	@Autowired
 	private CmmCharacterService cmmCharacterService;

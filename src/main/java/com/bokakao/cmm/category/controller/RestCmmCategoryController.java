@@ -19,11 +19,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
-@Api(tags = {"CmmCategoryController Api v1 - 공통 카테고리"})
+@Api(tags = {"RestCmmCategoryController Api v1 - 공통 카테고리"})
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/cmm/cate")
-public class CmmCategoryController {
+public class RestCmmCategoryController {
 
 	@Autowired
 	private CmmCategoryService cmmCategoryService;
