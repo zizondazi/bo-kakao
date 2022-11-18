@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @Api(tags = {"RestCmmCategoryController Api v1 - 공통 카테고리"})
 @RestController
 @Slf4j
-@RequestMapping("/api/v1/cmm/cate")
+@RequestMapping("/api/v1/cmm/cates")
 public class RestCmmCategoryController {
 
 	@Autowired
@@ -48,7 +48,7 @@ public class RestCmmCategoryController {
 		value 		 = "상위 카테고리 아이디",
 		dataType 	 = "int",
 		paramType 	 = "path",
-		defaultValue = "3"
+		example 	 = "0"
 	)
 	@GetMapping("/{cate_up_seq}")
 	public ResponseEntity<?> getCmmUpCategoryList(@PathVariable(name = "cate_up_seq") Integer cate_up_seq) {

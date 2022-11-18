@@ -76,26 +76,34 @@
 		from(
 			select @ROWNUM:=@ROWNUM+1 as row_num, a.*
 			from (select 
-						prdt_seq,
-						prdt_nm,
-						prdt_price,
-						prdt_sale_price,
-						prdt_img,
-						prdt_stock,
-						prdt_season,
-						prdt_dtl,
-						prdt_info,
-						korea_shipping_yn,
-						intl_shipping_yn,
-						reg_dtm,
-						reg_uid,
-						mdf_dtm,
-						mdf_uid
-				 from product_mng
-				 , (select @ROWNUM:=0) r
+						pm.prdt_seq,
+						pm.prdt_nm,
+						pm.prdt_price,
+						pm.prdt_sale_price,
+						pm.prdt_img,
+						pm.prdt_stock,
+						pm.prdt_season,
+						pm.prdt_dtl,
+						pm.prdt_info,
+						pm.korea_shipping_yn,
+						pm.intl_shipping_yn,
+						pm.reg_dtm,
+						pm.reg_uid,
+						pm.mdf_dtm,
+						pm.mdf_uid
+				 from product_mng pm
+				 inner join product_cate pc on pm.prdt_seq = pc.prdt_seq
+				 inner join product_character pch on pm.prdt_seq = pch.prdt_seq
+ 				 , (select @ROWNUM:=0) r
 				 where 1=1
 				 <if test="prdt_seq != '' and prdt_seq != null">
-				 	and prdt_seq = ${prdt_seq}
+				 	and pm.prdt_seq = ${prdt_seq}
+				 </if>
+				 <if test="sch_cate_seq != '' and sch_cate_seq != null">
+				 	and pc.cate_seq = ${sch_cate_seq}
+				 </if>
+				 <if test="sch_char_seq != '' and sch_char_seq != null">
+				 	and pch.char_seq = ${sch_char_seq}
 				 </if>
 				 order by prdt_seq asc
 			)a
@@ -103,5 +111,31 @@
 		<if test="page_no != '' and page_no != null">
 			where row_num between #{first_idx} and #{last_idx}
 		</if>
+	</select>
+	
+	<select id="getProduct" parameterType="com.bokakao.product.mng.domain.ProductMngDomain" resultType="com.bokakao.product.mng.domain.ProductMngDomain">
+		/* [ProductMngMapper - getProduct] 제품 단건 조회 */
+		select 
+				pm.prdt_seq,
+				pm.prdt_nm,
+				pm.prdt_price,
+				pm.prdt_sale_price,
+				pm.prdt_img,
+				pm.prdt_stock,
+				pm.prdt_season,
+				pm.prdt_dtl,
+				pm.prdt_info,
+				pm.korea_shipping_yn,
+				pm.intl_shipping_yn,
+				pm.reg_dtm,
+				pm.reg_uid,
+				pm.mdf_dtm,
+				pm.mdf_uid
+		 from product_mng pm
+		 where 1=1
+		 <if test="prdt_seq != '' and prdt_seq != null">
+		 	and pm.prdt_seq = ${prdt_seq}
+		 </if>
+		 order by prdt_seq asc
 	</select>
 </mapper>

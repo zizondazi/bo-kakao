@@ -95,4 +95,15 @@ public class ProductMngServiceImpl implements ProductMngService {
 			productMngMapper.mergeProductImg(prdt);
 		}
 	}
+	
+    /**
+     * 제품 상세 조회
+     * @param ProductMngDomain
+     * @return ProductMngDomain
+     * @throws Exception
+     */
+	@Override
+	public ProductMngDomain getProduct(ProductMngDomain mng) throws Exception {
+		return productMngMapper.getProduct(mng);
+	}
 }

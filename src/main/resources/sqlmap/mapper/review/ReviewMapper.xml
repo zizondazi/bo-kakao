@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bokakao.review.mapper.ReviewMapper">
+
+	<select id="getReviewByProduct" parameterType="com.bokakao.review.domain.ReviewDomain" resultType="com.bokakao.review.domain.ReviewDomain">
+		/* [ReviewMapper - getReviewByProduct] 리뷰 목록 조회 */
+		select t.*
+		from(
+			select @ROWNUM:=@ROWNUM+1 as row_num, a.*
+			from (select 
+						review_seq,
+						prdt_seq,
+						ord_num,
+						reg_uid,
+						review_score,
+						review_con,
+						(select count(1) from product_review_good prg where prg.review_seq = pr.review_seq) as review_good_cnt,
+						<if test="reg_uid != '' and reg_uid != null">
+							(select count(1) from product_review_good prg where prg.review_seq = pr.review_seq and prg.reg_uid = ${reg_uid}) as good_yn,
+						</if>
+						reg_dtm 
+				 from product_review pr
+ 				 , (select @ROWNUM:=0) r
+				 where 1=1
+				 <if test="prdt_seq != '' and prdt_seq != null">
+				 	and prdt_seq = ${prdt_seq}
+				 </if>
+				 order by reg_dtm desc
+			)a
+		)t
+		<if test="page_no != '' and page_no != null">
+			where row_num between #{first_idx} and #{last_idx}
+		</if>
+	</select>
+	
+	<insert id="setReivew" parameterType="com.bokakao.review.domain.ReviewDomain">
+	    <selectKey resultType="String" keyProperty="review_seq" order="BEFORE">
+	    	select ifnull(max(review_seq) + 1, 0) from product_review
+    	</selectKey>  
+		/* [ReviewMapper - setReivew] 리뷰 저장 */
+		insert into product_review (
+			review_seq,
+			prdt_seq,
+			ord_num,
+			reg_uid,
+			review_score,
+			review_con,
+			reg_dtm
+		) values (
+			${review_seq},
+			${prdt_seq},
+			${ord_num},
+			${reg_uid},
+			${review_score},
+			${review_con},
+			now()
+		)
+	</insert>
+</mapper>

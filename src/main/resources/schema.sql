@@ -110,3 +110,24 @@ CREATE TABLE  if not exists `product_img` (
   PRIMARY KEY (`prdt_seq`, `prdt_img`),
   KEY `PK_PRODUCT_MNG` (`prdt_seq`, `prdt_img`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;	
+
+CREATE TABLE if not exists `product_review` (
+  `review_seq` varchar(30) NOT NULL COMMENT '리뷰 아이디',
+  `prdt_seq` varchar(30) NOT NULL COMMENT '제품 아이디',
+  `ord_num` varchar(30) NOT NULL COMMENT '주문 번호',
+  `reg_uid` varchar(100) NOT NULL COMMENT '작성자',
+  `review_score` int(20) NOT NULL COMMENT '리뷰점수 0~5',
+  `review_con` varchar(200) DEFAULT 0 COMMENT '리뷰내용',
+  `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
+  `del_yn` varchar(2) DEFAULT 'N' COMMENT '삭제여부',
+  PRIMARY KEY (`review_seq`),
+  KEY `PK_PRODUCT_REVIEW` (`review_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `product_review_good` (
+  `review_seq` varchar(30) NOT NULL COMMENT '리뷰 아이디',
+  `reg_uid` varchar(100) NOT NULL COMMENT '작성자',
+  `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
+  PRIMARY KEY (`review_seq`, `reg_uid`),
+  KEY `PK_PRODUCT_REVIEW_GOOD` (`review_seq`, `reg_uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

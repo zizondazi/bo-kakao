@@ -40,4 +40,12 @@ public interface ProductMngMapper<T> {
      * @throws Exception
      */
     public List<T> getProductList(T param) throws Exception;
+    
+    /**
+     * 제품 단건 조회
+     * @param T
+     * @return T
+     * @throws Exception
+     */
+    public T getProduct(T param) throws Exception;
 }

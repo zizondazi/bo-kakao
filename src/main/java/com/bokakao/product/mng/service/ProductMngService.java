@@ -39,4 +39,12 @@ public interface ProductMngService {
      * @throws Exception
      */
     public List<ProductMngDomain> getProductList(ProductMngDomain mng) throws Exception;
+    
+    /**
+     * 제품 상세 조회
+     * @param ProductMngDomain
+     * @return ProductMngDomain
+     * @throws Exception
+     */
+    public ProductMngDomain getProduct(ProductMngDomain mng) throws Exception;
 }

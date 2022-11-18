@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Api(tags = {"RestCmmCharacterController Api v1"})
 @RestController
-@RequestMapping("/api/v1/cmm/character")
+@RequestMapping("/api/v1/cmm/characters")
 @Slf4j
 public class RestCmmCharacterController {
 
@@ -48,7 +48,7 @@ public class RestCmmCharacterController {
 		value 		 = "캐릭터 아이디",
 		dataType 	 = "int",
 		paramType 	 = "path",
-		defaultValue = "0"
+		example 	 = "0"
 	)
 	@GetMapping("/{char_seq}")
 	public ResponseEntity<?> getCmmCharacter(@PathVariable(name = "char_seq") Integer char_seq) {
