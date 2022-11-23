@@ -35,28 +35,6 @@ CREATE table if not exists `member_mng` (
   KEY `PK_MEMBER_MNG` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- friend_shop.order_mng definition
-
-CREATE table if not exists `order_mng` (
-  `ord_num` varchar(30) NOT NULL COMMENT '주문번호',
-  `purchaser_nm` varchar(50) NOT NULL COMMENT '주문자',
-  `purchaser_phone_num` varchar(10) NOT NULL COMMENT '주문자 전화번호(01012345368) 하이픈 제외',
-  `purchaser_email` varchar(50) NOT NULL COMMENT '주문자 이메일',
-  `recipient_nm` varchar(50) NOT NULL COMMENT '받는사람',
-  `recipient_phon_num` varchar(10) NOT NULL COMMENT '받는사람 전화번호(01012345368) 하이픈 제외',
-  `zip` varchar(6) NOT NULL COMMENT '우편번호',
-  `address` varchar(200) NOT NULL COMMENT '주소',
-  `address_etc` varchar(200) NOT NULL COMMENT '나머지 주소',
-  `messeage` varchar(200) DEFAULT NULL COMMENT '배송메시지',
-  `ord_confirm` varchar(3) DEFAULT NULL COMMENT '주문확정여부(Y: 확정, N: 미확정)',
-  `confirm_dtm` timestamp NULL DEFAULT NULL COMMENT '확정일자',
-  `reg_uid` varchar(50) NOT NULL COMMENT '등록 회원',
-  `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시 - 주문일',
-  PRIMARY KEY (`ord_num`),
-  KEY `PK_ORDER_MNG` (`ord_num`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
 -- friend_shop.product_mng definition
 
 CREATE table if not exists `product_mng` (
@@ -130,4 +108,128 @@ CREATE TABLE if not exists `product_review_good` (
   `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
   PRIMARY KEY (`review_seq`, `reg_uid`),
   KEY `PK_PRODUCT_REVIEW_GOOD` (`review_seq`, `reg_uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `ka_star_gram` (
+  `ka_star_seq` varchar(30) NOT NULL COMMENT '카스타그램 아이디',
+  `char_seq` varchar(5) NOT NULL COMMENT '캐릭터 아이디',
+  `ka_star_con` varchar(200) COMMENT '카스타그램 내용',
+  `ka_star_rel_url` varchar(200) COMMENT '카스타그램 내용',
+  `ka_star_tag` varchar(200) COMMENT '카스타그램 태그(| 구분)',
+  `more_name` varchar(200) COMMENT '추가 연결 명',
+  `more_url` varchar(200) COMMENT '추가 연결 url',
+  `del_yn` varchar(2) DEFAULT 'N' COMMENT '삭제여부',
+  `display_sdate` timestamp NOT NULL COMMENT '시작일',
+  `display_edate` timestamp NOT NULL COMMENT '게시 종료일',
+  `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
+  PRIMARY KEY (`ka_star_seq`),
+  KEY `PK_KA_STAR_GRAM` (`ka_star_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `ka_star_gram_media` (
+  `ka_star_seq` varchar(30) NOT NULL COMMENT '카스타그램 아이디',
+  `ka_star_media_type` varchar(2) NOT null COMMENT '카스타그램 미디어 타입',
+  `ka_star_media` varchar(200) NOT null COMMENT '카스타그램 미디어',
+  PRIMARY KEY (`ka_star_seq`, `ka_star_media`),
+  KEY `PK_KA_STAR_GRAM_MEDIA` (`ka_star_seq`, `ka_star_media`),
+  CONSTRAINT `FK_KA_STAR_GRAM_TO_KA_STAR_GRAM_MEDIA` FOREIGN KEY (`ka_star_seq`) REFERENCES `ka_star_gram` (`ka_star_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `ka_star_gram_rel_product` (
+  `ka_star_seq` varchar(30) NOT NULL COMMENT '카스타그램 아이디',
+  `prdt_seq` varchar(30) NOT null COMMENT '상품 아이디',
+  PRIMARY KEY (`ka_star_seq`, `prdt_seq`),
+  KEY `PK_KA_STAR_GRAM_REL_PRODUCT` (`ka_star_seq`, `prdt_seq`),
+  CONSTRAINT `FK_KA_STAR_GRAM_TO_KA_STAR_GRAM_REL_PRODUCT` FOREIGN KEY (`ka_star_seq`) REFERENCES `ka_star_gram` (`ka_star_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `ka_star_gram_good` (
+  `ka_star_seq` varchar(30) NOT null COMMENT '카스타그램 아이디',
+  `reg_uid` varchar(100) NOT NULL COMMENT '등록자',
+  `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
+  PRIMARY KEY (`ka_star_seq`, `reg_uid`),
+  KEY `PK_KA_STAR_GRAM_GOOD` (`ka_star_seq`, `reg_uid`),
+  CONSTRAINT `FK_KA_STAR_GRAM_TO_KA_STAR_GRAM_GOOD` FOREIGN KEY (`ka_star_seq`) REFERENCES `ka_star_gram` (`ka_star_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `ka_star_gram_comment` (
+  `comment_seq` varchar(30) NOT null COMMENT '댓글 아이디',
+  `ka_star_seq` varchar(30) NOT NULL COMMENT '카스타그램 아이디',
+  `comment` varchar(200) NOT NULL COMMENT '댓글내용',
+  `up_comment_seq` varchar(30) COMMENT '상위 댓글 아이디',
+  `del_yn` varchar(2) DEFAULT 'N' COMMENT '삭제여부',
+  `reg_uid` varchar(100) NOT NULL COMMENT '등록자',
+  `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
+  PRIMARY KEY (`comment_seq`),
+  KEY `PK_KA_STAR_GRAM_COMMENT` (`comment_seq`),
+  CONSTRAINT `FK_KA_STAR_GRAM_TO_KA_STAR_GRAM_COMMENT` FOREIGN KEY (`ka_star_seq`) REFERENCES `ka_star_gram` (`ka_star_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `ka_star_gram_comment_good` (
+  `comment_seq` varchar(30) NOT null COMMENT '댓글 아이디',
+  `reg_uid` varchar(100) NOT NULL COMMENT '등록자',
+  `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
+  PRIMARY KEY (`comment_seq`, `reg_uid`),
+  KEY `PK_KA_STAR_GRAM_COMMENT_GOOD` (`comment_seq`, `reg_uid`),
+  CONSTRAINT `FK_KA_STAR_GRAM_COMMENT_TO_KA_STAR_GRAM_COMMENT_GOOD` FOREIGN KEY (`comment_seq`) REFERENCES `ka_star_gram_comment` (`comment_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+CREATE TABLE if not exists `cart_mng` (
+  `cart_seq` varchar(30) NOT NULL COMMENT '카트 아이디',
+  `prdt_seq` varchar(30) NOT NULL COMMENT '상품 아이디',
+  `prdt_cnt` int(30) NOT NULL COMMENT '상품 수',
+  `reg_uid` varchar(100) NOT NULL COMMENT '작성자',
+  `reg_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시',
+  PRIMARY KEY (`cart_seq`),
+  KEY `PK_CART_MNG` (`cart_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `order_mng` (
+  `ord_num` varchar(30) NOT NULL COMMENT '주문번호',
+  `ord_uid`	varchar(100) NOT NULL COMMENT '주문자아이디',
+  `ord_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시 - 주문일',
+  `ord_status` varchar(5) NOT NULL COMMENT '주문상태(상품준비중/배송준비중/배송보류/배송대기/배송중/배송완료)',
+  `pay_status` varchar(5) NOT NULL COMMENT '결제상태(입금전/입금완료(수동,자동)/결제완료)',
+  `cs_status` varchar(5) NOT NULL COMMENT '취소/교환/반품/환불',
+  `dilver_price` int(10) NOT NULL COMMENT '배송금액',
+  `use_point` int(10) NOT NULL COMMENT '포인트 사용금액',
+  `ord_confirm` varchar(3) DEFAULT NULL COMMENT '주문확정여부(Y: 확정, N: 미확정)',
+  `ord_nm` varchar(50) NOT NULL COMMENT '주문자',
+  `ord_phone_num` varchar(10) NOT NULL COMMENT '주문자 전화번호(01012345368) 하이픈 제외',
+  `ord_email` varchar(50) NOT NULL COMMENT '주문자 이메일',
+  `recipient_nm` varchar(50) NOT NULL COMMENT '받는사람',
+  `recipient_phone_num` varchar(10) NOT NULL COMMENT '받는사람 전화번호(01012345368) 하이픈 제외',
+  `zip` varchar(6) NOT NULL COMMENT '우편번호',
+  `address` varchar(200) NOT NULL COMMENT '주소',
+  `address_etc` varchar(200) NOT NULL COMMENT '나머지 주소',
+  `messeage` varchar(200) DEFAULT NULL COMMENT '배송메시지',
+  `confirm_dtm` timestamp NULL DEFAULT NULL COMMENT '확정일자',
+  PRIMARY KEY (`ord_num`),
+  KEY `PK_ORDER_MNG` (`ord_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `order_detail` (
+  `ord_num` varchar(30) NOT NULL COMMENT '주문번호',
+  `prdt_seq` varchar(30) NOT NULL COMMENT '상품 아이디',
+  `prdt_count` int(20) NOT NULL COMMENT '상품 수량',
+  `prdt_price` int(50) NOT NULL COMMENT '상품 가격',
+  PRIMARY KEY (`ord_num`, `prdt_seq`),
+  KEY `PK_ORDER_DETAIL` (`ord_num`, `prdt_seq`),
+  CONSTRAINT `FK_ORDER_MNG_TO_ORDER_DETAIL` FOREIGN KEY (`ord_num`) REFERENCES `order_mng` (`ord_num`),
+  CONSTRAINT `FK_PRODUCT_MNG_TO_ORDER_DETAIL` FOREIGN KEY (`prdt_seq`) REFERENCES `product_mng` (`prdt_seq`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `pay_mng` (
+  `pay_seq` varchar(30) NOT NULL COMMENT '결제코드',
+  `ord_num` varchar(30) NOT NULL COMMENT '주문번호',
+  `pay_method` varchar(30) NOT NULL COMMENT '결제수단',
+  `pay_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '결제일',
+  `pay_price` int(50) NOT NULL COMMENT '결제금액',
+  `deposit_price` int(50) NOT NULL COMMENT '입금금액',
+  `deposit_nm` varchar(50) NOT NULL COMMENT '입금자명',
+  `deposit_bank` varchar(50) NOT NULL COMMENT '입금은행',
+  PRIMARY KEY (`pay_seq`),
+  KEY `PK_PAY_MNG` (`pay_seq`),
+  CONSTRAINT `FK_ORDER_MNG_TO_PAY_MNG` FOREIGN KEY (`ord_num`) REFERENCES `order_mng` (`ord_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
