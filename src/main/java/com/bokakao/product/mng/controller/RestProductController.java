@@ -61,6 +61,7 @@ public class RestProductController {
 		ProductMngDomain prdt = new ProductMngDomain();
 		try {
 			prdt.setPrdt_seq(String.valueOf(prdt_seq));
+			prdt.setUid("1");
 			prdt = productMngService.getProduct(prdt);
 			
 		} catch (Exception e) {
@@ -91,6 +92,35 @@ public class RestProductController {
 			if(page_no != null) prdt.setPage_no(page_no);
 			if(page_size != null) prdt.setPage_size(page_size);
 			prdt.setSch_cate_seq(String.valueOf(cate_seq));
+			
+			prdt_list = productMngService.getProductList(prdt);
+		} catch (Exception e) {
+			new ResponseStatusException(HttpStatus.BAD_REQUEST, "cate_up_seq 값이 없습니다.");
+		}
+		return new ResponseEntity<>(prdt_list, HttpStatus.OK);
+	}
+	
+	@ApiOperation(value = "캐릭터 별 제품 목록 조회", notes = "<strong style='color:red;'>캐릭터 별 제품</strong> 목록을 조회한다.")
+	@ApiImplicitParam(
+			name 		 = "char_seq", 
+			value 		 = "캐릭터 아이디",
+			dataType 	 = "int",
+			paramType 	 = "path",
+			example 	 = "0"
+			)
+	@GetMapping("/char/{char_seq}")
+	public ResponseEntity<?> getProductDetailByCharacter(
+			@PathVariable(name = "char_seq") Integer char_seq,
+			@ApiParam(value = "페이지 번호", required = false) @RequestParam(required = false) Integer page_no,
+			@ApiParam(value = "페이지 사이즈", required = false) @RequestParam(required = false) Integer page_size
+			) {
+		List<ProductMngDomain> prdt_list = new ArrayList<ProductMngDomain>();
+		ProductMngDomain prdt = new ProductMngDomain();
+		
+		try {
+			if(page_no != null) prdt.setPage_no(page_no);
+			if(page_size != null) prdt.setPage_size(page_size);
+			prdt.setSch_char_seq(String.valueOf(char_seq));
 			
 			prdt_list = productMngService.getProductList(prdt);
 		} catch (Exception e) {
