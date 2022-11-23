@@ -92,8 +92,12 @@
 						pm.mdf_dtm,
 						pm.mdf_uid
 				 from product_mng pm
-				 inner join product_cate pc on pm.prdt_seq = pc.prdt_seq
-				 inner join product_character pch on pm.prdt_seq = pch.prdt_seq
+				 <if test="sch_cate_seq != '' and sch_cate_seq != null">
+				 	inner join product_cate pc on pm.prdt_seq = pc.prdt_seq
+				 </if>
+				 <if test="sch_char_seq != '' and sch_char_seq != null">
+				 	inner join product_character pch on pm.prdt_seq = pch.prdt_seq
+				 </if>
  				 , (select @ROWNUM:=0) r
 				 where 1=1
 				 <if test="prdt_seq != '' and prdt_seq != null">
