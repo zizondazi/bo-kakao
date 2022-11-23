@@ -28,6 +28,7 @@ public class CommonDomain {
 	
 	/* 검색 조건 */
 	private String sch_cate_seq;	// 검색 - 카테고리 seq	
+	private String sch_char_seq;	// 검색 - 캐릭터 seq	
 	
     public void setPage_no(Integer page_no) {
         this.page_no = page_no;

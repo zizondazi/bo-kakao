@@ -127,6 +127,9 @@
 				pm.prdt_info,
 				pm.korea_shipping_yn,
 				pm.intl_shipping_yn,
+				<if test="uid != '' and uid != null">
+					(select count(1) from order_mng om inner join order_detail od on om.ord_num = od.ord_num where om.ord_uid = ${uid} and od.prdt_seq = ${prdt_seq}) as ord_cnt,
+				</if>
 				pm.reg_dtm,
 				pm.reg_uid,
 				pm.mdf_dtm,

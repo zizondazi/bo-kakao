@@ -24,4 +24,5 @@ public class ProductMngDomain extends CommonDomain {
 	private String korea_shipping_yn;	// 국내배송 가능여부
 	private String intl_shipping_yn;	// 해외배송 가능여부
 	
+	private Integer ord_cnt;  			// 주문 수
 }
