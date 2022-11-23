@@ -189,12 +189,9 @@ CREATE TABLE if not exists `order_mng` (
   `ord_num` varchar(30) NOT NULL COMMENT '주문번호',
   `ord_uid`	varchar(100) NOT NULL COMMENT '주문자아이디',
   `ord_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '등록일시 - 주문일',
-  `ord_status` varchar(5) NOT NULL COMMENT '주문상태(상품준비중/배송준비중/배송보류/배송대기/배송중/배송완료)',
   `pay_status` varchar(5) NOT NULL COMMENT '결제상태(입금전/입금완료(수동,자동)/결제완료)',
-  `cs_status` varchar(5) NOT NULL COMMENT '취소/교환/반품/환불',
-  `dilver_price` int(10) NOT NULL COMMENT '배송금액',
+  `delivery_price` int(10) NOT NULL COMMENT '배송금액',
   `use_point` int(10) NOT NULL COMMENT '포인트 사용금액',
-  `ord_confirm` varchar(3) DEFAULT NULL COMMENT '주문확정여부(Y: 확정, N: 미확정)',
   `ord_nm` varchar(50) NOT NULL COMMENT '주문자',
   `ord_phone_num` varchar(10) NOT NULL COMMENT '주문자 전화번호(01012345368) 하이픈 제외',
   `ord_email` varchar(50) NOT NULL COMMENT '주문자 이메일',
@@ -214,11 +211,14 @@ CREATE TABLE if not exists `order_detail` (
   `prdt_seq` varchar(30) NOT NULL COMMENT '상품 아이디',
   `prdt_count` int(20) NOT NULL COMMENT '상품 수량',
   `prdt_price` int(50) NOT NULL COMMENT '상품 가격',
+  `ord_status` varchar(5) NOT NULL COMMENT '주문상태(상품준비중/배송준비중/배송보류/배송대기/배송중/배송완료/구매확정)',
+  `cs_status` varchar(5) NOT NULL COMMENT '취소/교환/반품/환불',
   PRIMARY KEY (`ord_num`, `prdt_seq`),
   KEY `PK_ORDER_DETAIL` (`ord_num`, `prdt_seq`),
   CONSTRAINT `FK_ORDER_MNG_TO_ORDER_DETAIL` FOREIGN KEY (`ord_num`) REFERENCES `order_mng` (`ord_num`),
   CONSTRAINT `FK_PRODUCT_MNG_TO_ORDER_DETAIL` FOREIGN KEY (`prdt_seq`) REFERENCES `product_mng` (`prdt_seq`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 CREATE TABLE if not exists `pay_mng` (
   `pay_seq` varchar(30) NOT NULL COMMENT '결제코드',
@@ -226,10 +226,17 @@ CREATE TABLE if not exists `pay_mng` (
   `pay_method` varchar(30) NOT NULL COMMENT '결제수단',
   `pay_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '결제일',
   `pay_price` int(50) NOT NULL COMMENT '결제금액',
-  `deposit_price` int(50) NOT NULL COMMENT '입금금액',
-  `deposit_nm` varchar(50) NOT NULL COMMENT '입금자명',
-  `deposit_bank` varchar(50) NOT NULL COMMENT '입금은행',
   PRIMARY KEY (`pay_seq`),
   KEY `PK_PAY_MNG` (`pay_seq`),
   CONSTRAINT `FK_ORDER_MNG_TO_PAY_MNG` FOREIGN KEY (`ord_num`) REFERENCES `order_mng` (`ord_num`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE if not exists `cancel_history` (
+  `pay_history_seq` varchar(30) NOT NULL COMMENT '결제이력코드',
+  `ord_num` varchar(30) NOT NULL COMMENT '주문번호',
+  `cancel_dtm` timestamp NOT NULL DEFAULT current_timestamp() COMMENT '캔슬',
+  `cancel_price` int(50) NOT NULL COMMENT '취소금액',
+  PRIMARY KEY (`pay_history_seq`),
+  KEY `PK_CANCEL_HISTORY` (`pay_history_seq`),
+  CONSTRAINT `FK_ORDER_MNG_TO_CANCEL_HISTORY` FOREIGN KEY (`ord_num`) REFERENCES `order_mng` (`ord_num`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
