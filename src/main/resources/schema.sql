@@ -1,6 +1,6 @@
 -- friend_shop.cart_mng definition
 
-CREATE TABLE if not exists  if not exists  `cart_mng` (
+CREATE TABLE if not exists  `cart_mng` (
   `cart_seq` varchar(30) NOT NULL COMMENT '카트 아이디',
   `prdt_seq` varchar(30) NOT NULL COMMENT '상품 아이디',
   `prdt_cnt` int(30) NOT NULL COMMENT '상품 수',

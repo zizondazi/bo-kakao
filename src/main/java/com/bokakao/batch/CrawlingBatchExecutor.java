@@ -89,7 +89,7 @@ public class CrawlingBatchExecutor {
 			// 제품 상세 내용 저장
 			getProductDetail((ChromeDriver) driver);
 			
-			// TODO 카스타그램 크롤링
+			// 카스타그램 크롤링
 			
 			
 			System.out.println("==== end :: crawling ====");
@@ -286,8 +286,9 @@ public class CrawlingBatchExecutor {
 	// 카테고리별 제품 저장
 	public void getProductByCategory(ChromeDriver driver) {
 		try {
+			
 			// gnb 메뉴 클릭
-			driver.findElement(By.className("ico_gnb_menu")).click();
+			driver.executeScript("arguments[0].click();", driver.findElement(By.className("ico_gnb_menu")));
 			
 			String html = driver.getPageSource().toString();
 			

@@ -90,26 +90,39 @@
 						pm.reg_dtm,
 						pm.reg_uid,
 						pm.mdf_dtm,
-						pm.mdf_uid
-				 from product_mng pm
-				 <if test="sch_cate_seq != '' and sch_cate_seq != null">
-				 	inner join product_cate pc on pm.prdt_seq = pc.prdt_seq
+						pm.mdf_uid,
+						(select ifnull(sum(od.prdt_count), 0) from order_detail od where od.prdt_seq = pm.prdt_seq) as ord_cnt
+				from product_mng pm
+				<if test="sch_cate_seq != '' and sch_cate_seq != null">
+					inner join product_cate pc on pm.prdt_seq = pc.prdt_seq
+				</if>
+				<if test="sch_char_seq != '' and sch_char_seq != null">
+					inner join product_character pch on pm.prdt_seq = pch.prdt_seq
+				</if>
+ 				, (select @ROWNUM:=0) r
+				where 1=1
+				<if test="prdt_seq != '' and prdt_seq != null">
+					and pm.prdt_seq = ${prdt_seq}
+				</if>
+				<if test="sch_cate_seq != '' and sch_cate_seq != null">
+					and pc.cate_seq = ${sch_cate_seq}
+				</if>
+				<if test="sch_char_seq != '' and sch_char_seq != null">
+					and pch.char_seq = ${sch_char_seq}
+				</if>
+				<if test='list_sort != "" and list_sort != null'>
+					<choose>
+						<when test='list_sort == "new"'>
+							order by reg_dtm desc
+						</when>	
+						<when test='list_sort == "best"'>
+							order by ord_cnt desc
+						</when>					 	
+						<otherwise>
+							order by prdt_nm asc
+						</otherwise>
+					</choose>
 				 </if>
-				 <if test="sch_char_seq != '' and sch_char_seq != null">
-				 	inner join product_character pch on pm.prdt_seq = pch.prdt_seq
-				 </if>
- 				 , (select @ROWNUM:=0) r
-				 where 1=1
-				 <if test="prdt_seq != '' and prdt_seq != null">
-				 	and pm.prdt_seq = ${prdt_seq}
-				 </if>
-				 <if test="sch_cate_seq != '' and sch_cate_seq != null">
-				 	and pc.cate_seq = ${sch_cate_seq}
-				 </if>
-				 <if test="sch_char_seq != '' and sch_char_seq != null">
-				 	and pch.char_seq = ${sch_char_seq}
-				 </if>
-				 order by prdt_seq asc
 			)a
 		)t
 		<if test="page_no != '' and page_no != null">
