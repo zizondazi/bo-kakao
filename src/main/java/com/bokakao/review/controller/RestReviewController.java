@@ -46,7 +46,6 @@ public class RestReviewController {
 		
 		List<ReviewDomain> review_list = null;
 		ReviewDomain review = new ReviewDomain();
-		
 		try {
 			if(page_no != null) review.setPage_no(page_no);
 			if(page_size != null) review.setPage_size(page_size);

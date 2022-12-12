@@ -33,13 +33,15 @@ public class RestProductController {
 	@GetMapping()
 	public ResponseEntity<?> getProductList(
 			@ApiParam(value = "페이지 번호", required = false) @RequestParam(required = false) Integer page_no,
-			@ApiParam(value = "페이지 사이즈", required = false) @RequestParam(required = false) Integer page_size) {
+			@ApiParam(value = "페이지 사이즈", required = false) @RequestParam(required = false) Integer page_size,
+			@ApiParam(value = "페이지 정렬(new, best)", required = false) @RequestParam(required = false) String list_sort) {
 		List<ProductMngDomain> prdt_list = new ArrayList<ProductMngDomain>();
 		ProductMngDomain prdt = new ProductMngDomain();
 		
 		try {
 			if(page_no != null) prdt.setPage_no(page_no);
 			if(page_size != null) prdt.setPage_size(page_size);
+			if(list_sort != null) prdt.setList_sort(list_sort);
 			
 			prdt_list = productMngService.getProductList(prdt);
 		}catch (Exception e) {
@@ -83,14 +85,15 @@ public class RestProductController {
 	public ResponseEntity<?> getProductDetailByCate(
 			@PathVariable(name = "cate_seq") Integer cate_seq,
 			@ApiParam(value = "페이지 번호", required = false) @RequestParam(required = false) Integer page_no,
-			@ApiParam(value = "페이지 사이즈", required = false) @RequestParam(required = false) Integer page_size
-			) {
+			@ApiParam(value = "페이지 사이즈", required = false) @RequestParam(required = false) Integer page_size,
+			@ApiParam(value = "페이지 정렬(new, best)", required = false) @RequestParam(required = false) String list_sort) {
 		List<ProductMngDomain> prdt_list = new ArrayList<ProductMngDomain>();
 		ProductMngDomain prdt = new ProductMngDomain();
 		
 		try {
 			if(page_no != null) prdt.setPage_no(page_no);
 			if(page_size != null) prdt.setPage_size(page_size);
+			if(list_sort != null) prdt.setList_sort(list_sort);
 			prdt.setSch_cate_seq(String.valueOf(cate_seq));
 			
 			prdt_list = productMngService.getProductList(prdt);
@@ -112,14 +115,15 @@ public class RestProductController {
 	public ResponseEntity<?> getProductDetailByCharacter(
 			@PathVariable(name = "char_seq") Integer char_seq,
 			@ApiParam(value = "페이지 번호", required = false) @RequestParam(required = false) Integer page_no,
-			@ApiParam(value = "페이지 사이즈", required = false) @RequestParam(required = false) Integer page_size
-			) {
+			@ApiParam(value = "페이지 사이즈", required = false) @RequestParam(required = false) Integer page_size,
+			@ApiParam(value = "페이지 정렬(new, best)", required = false) @RequestParam(required = false) String list_sort) {
 		List<ProductMngDomain> prdt_list = new ArrayList<ProductMngDomain>();
 		ProductMngDomain prdt = new ProductMngDomain();
 		
 		try {
 			if(page_no != null) prdt.setPage_no(page_no);
 			if(page_size != null) prdt.setPage_size(page_size);
+			if(list_sort != null) prdt.setList_sort(list_sort);
 			prdt.setSch_char_seq(String.valueOf(char_seq));
 			
 			prdt_list = productMngService.getProductList(prdt);

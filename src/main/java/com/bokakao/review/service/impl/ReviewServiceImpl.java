@@ -17,7 +17,7 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	/**
      * 상품 별 리뷰 조회
-     * @param ReviewDomain
+     * @param OrderDomain
      * @return
      * @throws Exception
      */
@@ -28,7 +28,7 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	/**
 	 * 상품 별 리뷰 저장
-	 * @param ReviewDomain
+	 * @param OrderDomain
 	 * @return
 	 * @throws Exception
 	 */
